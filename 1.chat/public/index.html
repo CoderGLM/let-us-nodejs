@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>chat room</title>
+
+    <style>
+    * { margin: 0; }
+
+    #content {
+      position: absolute;
+      top: 0;left: 0;bottom: 0;right: 0;
+      padding: 20px;
+      margin: auto;
+      width: 60%;
+      height: 70%;
+      border-radius: 10px;
+      border: 1px solid #3e3e3e;
+      box-shadow: 1px 1px 1px #000,2px 2px 1px red,3px 3px 1px green;
+    }
+    #room {
+      color: #333;
+    }
+    #messages {
+      width: 80%;
+      height: 50%;
+      margin: auto;
+      border: 1px solid #00f;
+      box-shadow: inset 1px 1px 1px #000;
+      overflow: auto;
+    }
+    #messages>div {
+      padding: 2px;
+    }
+    #input-container {
+      width: 90%;
+      margin: 20px auto;
+      text-align: center;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="content">
+        房间：<h1 id="room">Lobby</h1>
+        <div id="room-list"></div>
+        <div id="messages">
+          <div>Welcome!</div>
+        </div>
+
+        <div id="input-container">
+          <input id="send-message">
+          <input id="send-btn" type="button" value="send">
+        </div>
+
+        <aside>
+          <h1>Chat commands:</h1>
+          <ul>
+            <li>Change nickname: <code>/nick [username]</code></li>
+            <li>Join/create room: <code>/join [room name]</code></li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="./js/chat.js"></script>
+    <script src="./js/chat_ui.js"></script>
+    <script>
+
+    $(function () {
+      var socket = io.connect();
+      var app = new Chat(socket);
+      socket.on('nameResult', function (result) {
+        var message;
+        if (result.success) {
+          message = '你的名字是：' + result.name + '.';
+        } else {
+          message = result.message;
+        }
+        $('#messages').append(divSystemContentElement(message));
+      });
+      socket.on('message', function (message) {
+        $('#messages').append($('<div></div>').text(message.text));
+      });
+      socket.on('rooms', function (rooms) {
+        console.log('rooms');
+      });
+
+      $('#send-btn').on('click', function () {
+        processUserInput(app, socket);
+        console.log('---');
+        return false;
+      });
+    });
+    </script>
+  </body>
+</html>
