@@ -8,11 +8,11 @@ var io,
 
 exports.listen = (server) => {
   io = socketio.listen(server);
-  io.set('log level', 1);
 
   io.sockets.on('connection', (socket) => {
     guestNumber = assignGuestName(socket, guestNumber, nickNames, namesUsed);
     joinRoom(socket, 'Lobby');
+
     handleMessageBroadcasting(socket, nickNames);
     handleNameChangeAttempts(socket, nickNames, namesUsed);
     handleRoomJoining(socket);
@@ -37,6 +37,11 @@ function assignGuestName(socket, guestNumber, nickNames, namesUsed) {
   return guestNumber + 1;
 }
 
+/*
+ *
+ * 更换聊天室
+ *
+ */
 function joinRoom(socket, room) {
   socket.join(room);
   currentRoom[socket.id] = room;
@@ -90,7 +95,7 @@ function handleNameChangeAttempts(socket, nickNames, namesUsed) {
           message: 'That name is already in use.'
         });
       }
-    } 
+    }
   });
 }
 

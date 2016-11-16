@@ -78,10 +78,17 @@
         } else {
           message = result.message;
         }
-        $('#messages').append(divSystemContentElement(message));
+        insertSysMessage(message);
       });
       socket.on('message', function (message) {
-        $('#messages').append($('<div></div>').text(message.text));
+        insertMessage(message.text);
+      });
+      socket.on('joinResult', function (result) {
+        if (result.room) {
+          $('#room').text(result.room);
+        } else {
+          insertMessage('更换聊天室失败');
+        }
       });
       socket.on('rooms', function (rooms) {
         console.log('rooms');

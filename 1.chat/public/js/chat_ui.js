@@ -1,9 +1,9 @@
-function divEscapedContentElement(message) {
-  return $('<div></div>').text(message);
+function insertMessage(message) {
+  $('#messages').append($('<div></div>').html(message));
 }
 
-function divSystemContentElement(message) {
-  return $('<div></div>').html('<i>' + message + '</i>');
+function insertSysMessage(message) {
+  insertMessage('<i>' + message + '</i>');
 }
 
 function processUserInput(app, socket) {
@@ -12,12 +12,11 @@ function processUserInput(app, socket) {
   if (message.charAt(0) === '/') {
     systemMessage = app.processCommand(message);
     if (systemMessage) {
-      $('#messages').append(divSystemContentElement(systemMessage));
+      insertMessage(systemMessage);
     }
   } else {
-    $('#room').text('Lobby');
     app.sendMessage($('#room').text(), message);
-    $('#messages').append(divEscapedContentElement(message));
+    insertMessage(message);
     $('#messages').scrollTop($('#messages').prop('scrollHeight'));
   }
   $('#send-message').val('');
