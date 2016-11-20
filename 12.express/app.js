@@ -4,13 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser'); // post请求参数
-/*
- *
- *  multer: https://github.com/expressjs/multer
- *
- */
-var multer = require('multer'); // 文件上传
-var upload = multer({ dest: path.join(__dirname, '/public/tmp')})
+
 
 var photos = require('./routes/photos');
 
