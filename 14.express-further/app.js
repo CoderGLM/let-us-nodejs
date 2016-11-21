@@ -9,9 +9,10 @@ var session = require('express-session');
 var messages = require('./lib/messages');
 var user = require('./lib/middleware/user');
 
-var index = require('./routes/index')
 var registerRoute = require('./routes/register')
 var loginRoute = require('./routes/login')
+var entriesRoute = require('./routes/entries')
+var apiRoute = require('./routes/api')
 
 var app = express();
 
@@ -28,12 +29,14 @@ app.use(cookieParser());
 app.use(session({secret: 'keyboard cat',cookie: {}}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(user)
+
 app.use(messages)
 
-app.use('/', index)
+app.use('/api', apiRoute)
 app.use(loginRoute)
 app.use(registerRoute)
+app.use(user)
+app.use(entriesRoute)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
