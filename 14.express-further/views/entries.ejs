@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link href="/stylesheets/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <% include menu %>
+    <% entries.forEach(function (e) { %>
+      <div class="en">
+        <h3><%= e.title %></h3>
+        <p><%= e.body %></p>
+        <p>Posted by <%= e.username %></p>
+      </div>
+    <% }) %>
+    <% include pager %>
+  </body>
+</html>
