@@ -1,19 +1,27 @@
 import express from 'express'
-// https://davidbeath.com/posts/expressjs-40-basicauth.html
-import basicAuth from 'basic-auth-connect'
+// https://github.com/jshttp/basic-auth
+import basicAuth from 'basic-auth'
 import User from '../lib/user'
 
 const router = express.Router()
 
+/*
+ *
+ *  授权，此为示例，其他接口未添加此功能
+ *
+ */
 router.get('/', function (req, res, next) {
-  if (basicAuth(User.authenticate)) {
-    return next()
+  let credentials = basicAuth(req)
+  if (credentials) {
+    User.authenticate(credentials.name, credentials.pass, function (err) {
+      if (err) throw err
+      res.end('Access granted')
+    })
   } else {
-    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-    return res.send(401);
+    res.statusCode = 401
+    res.setHeader('WWW-Authenticate', 'Basic realm="example"')
+    res.end('Access denied')
   }
-}, function (req, res, next) {
-  res.send(200, 'Authenticated')
 })
 
 router.get('/user/:id', function (req, res, next) {

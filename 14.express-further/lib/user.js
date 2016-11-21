@@ -40,10 +40,9 @@ User.prototype.save = function (fn) {
 }
 
 User.prototype.update = function (fn) {
-  const id = this.id
-  db.set(`user:id:${this.name}`, id, err => {
+  db.set(`user:id:${this.name}`, this.id, err => {
     if (err) return fn(err)
-      db.hmset(`user:${id}`, this, err => {
+      db.hmset(`user:${this.id}`, this, err => {
         fn(err)
       })
   })
@@ -59,6 +58,18 @@ User.prototype.hashPassword = function (fn) {
       fn()
     })
   })
+}
+
+/*
+ *
+ *  限制JSON.stringify只能输出id和name
+ *
+ */
+User.prototype.toJSON = function () {
+  return {
+    id: this.id,
+    name: this.name
+  }
 }
 
 User.getByName = function (name, fn) {

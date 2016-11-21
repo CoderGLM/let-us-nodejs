@@ -33,7 +33,6 @@ router.post('/post', validate.required('entry[title]'),
     title: req.body["entry[title]"],
     body: req.body["entry[body]"]
   }
-  console.log(res.locals.user)
   const entry = new Entry({
     'username': res.locals.user.name,
     'title': data.title,

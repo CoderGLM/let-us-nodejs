@@ -8,7 +8,6 @@ router.get('/register', function (req, res, next) {
 })
 
 router.post('/register', function (req, res, next) {
-  console.log(req.body)
   /*const data = req.body.user*/
   const data = { name: req.body["user[name]"], pass: req.body["user[pass]"] }
   User.getByName(data.name, function (err, user) {
