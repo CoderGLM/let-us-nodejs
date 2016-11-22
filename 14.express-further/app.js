@@ -8,6 +8,8 @@ var session = require('express-session');
 
 var messages = require('./lib/messages');
 var user = require('./lib/middleware/user');
+var notFound = require('./lib/middleware/notFound');
+var error = require('./lib/middleware/error');
 
 var registerRoute = require('./routes/register')
 var loginRoute = require('./routes/login')
@@ -29,24 +31,27 @@ app.use(cookieParser());
 app.use(session({secret: 'keyboard cat',cookie: {}}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use(messages)
+
+if (process.env.ERROR_ROUTE) {
+  // $ ERROR_ROUTE=1 npm start，用来测试error middleware
+  app.get('/dev/error', function (req, res, next) {
+    var err = new Error('database connection failed')
+    err.type = 'database'
+    next(err)
+  })
+}
 
 app.use('/api', apiRoute)
 app.use(loginRoute)
 app.use(registerRoute)
 app.use(user)
 app.use(entriesRoute)
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+app.use(notFound)
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(error)
+/* app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -54,6 +59,6 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
+}); */
 
 module.exports = app;
