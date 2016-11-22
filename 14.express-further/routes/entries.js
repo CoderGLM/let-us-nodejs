@@ -10,6 +10,10 @@ const router = express.Router()
  */
 router.get('/:page?', page(Entry.count, 5), function (req, res, next) {
   let page = req.page
+  if (!page) {
+    next()
+    return
+  }
   Entry.getRange(page.from, page.to, function (err, entries) {
     if (err) return next(err)
     res.render('entries', {
