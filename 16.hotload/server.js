@@ -13,10 +13,7 @@ const io = socketio.listen(server)
 let watchers = {}
 
 app.use((req, res, next) => {
-  req.on('static', () => {
-    let file = url.parse(req.url).pathname
-    createWatcher(file)
-  })
+  createWatcher(req)
   next()
 })
 
@@ -24,11 +21,13 @@ app.use(express.static(root))
 
 server.listen(3000)
 
+console.log('Server is on available, you can access our website via http://localhost:3000')
 
-function createWatcher(file) {
-  const absolute = path.join(root, file)
-  
+function createWatcher(req) {
   if (watchers[absolute]) return
+
+  const file = url.parse(req.url).pathname
+  const absolute = path.join(root, file)
 
   fs.watchFile(absolute, (cur, prev) => {
     if (cur.mtime !== prev.mtime) {
