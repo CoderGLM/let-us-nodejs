@@ -3,14 +3,14 @@ import path from 'path'
 import Chain from '../pattern/Chain'
 const router = require('koa-router')()
 
-function addControllers (router) {
-  fs.readdirSync(`${process.cwd()}/controllers`)
+function configRouters (router) {
+  fs.readdirSync(`${process.cwd()}/routers`)
     .filter(f => {
       return f.endsWith('.js')
     })
     .forEach((f, index) => {
       console.log(`process controller: ${f}...`)
-      const filePath = path.join(`${process.cwd()}/controllers/${f}`)
+      const filePath = path.join(`${process.cwd()}/routers/${f}`)
       console.log(filePath)
       let mapping = require(filePath)
       addMapping(router, mapping)
@@ -52,9 +52,9 @@ function handleLAST (router, url, middleware) {
   console.log(`invalid url: ${url}`)
 }
 
-module.exports = (dir = `${process.cwd()}/controller` ) => {
-  let ctrller_dir = dir || `${process.cwd()}/controller`
-  addControllers(router, ctrller_dir)
+module.exports = (dir = `${process.cwd()}/routers` ) => {
+  let ctrller_dir = dir
+  configRouters(router, ctrller_dir)
   return router.routes()
 }
 
