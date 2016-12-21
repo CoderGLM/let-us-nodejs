@@ -5,14 +5,22 @@ import request from 'request'
 
 const url = 'http://www.ss.pku.edu.cn/index.php/newscenter/news/2391'
 
-function fetchPage(url) {
-    startRequest(url)
+function fetchPage (url) {
+    startRequestViaRequest(url)
 }
 
-function startRequest(url) {
+/*
+ *  startRequest via http module
+ */
+function startRequestViaHttp (url) {
     http.get(url, res => {
+        const statusCode = res.statusCode
+        const contentType = res.headers['content-type']
+        if (statusCode !== 200) {
+            throw new Error(`Request Failed.\nStatus Code:${statusCode}`)
+        }
+        
         let html = ''
-        let titles = []
         res.setEncoding('utf-8')
         res.on('data', chunk => {
             html += chunk
@@ -28,10 +36,35 @@ function startRequest(url) {
                 author: $('[title=供稿]').text().trim(), 
             }
 
-            console.log(news)
             saveArticle($)
             saveImage($)
         })
+    })
+}
+/*
+ *  startRequest via request module
+ */
+function startRequestViaRequest (url) {
+    request(url, (error, res, body) => {
+        const statusCode = res.statusCode
+        const contentType = res.headers['content-type']
+        if (statusCode !== 200) {
+            throw new Error(`Request Failed.\nStatus Code:${statusCode}`)
+        }
+
+        let $ = cheerio.load(body)
+        let time = $('.article-info a:first-child').next().text().trim()
+
+        let news = {
+            title: $('.article-title a').text().trim(),
+            time: time,
+            link: "http://www.ss.pku.edu.cn" + $("div.article-title a").attr('href'),
+            author: $('[title=供稿]').text().trim(),
+        }
+
+        console.log(news)
+        saveArticle($)
+        saveImage($)
     })
 }
 
