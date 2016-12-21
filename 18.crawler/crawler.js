@@ -30,6 +30,7 @@ function startRequest(url) {
 
             console.log(news)
             saveArticle($)
+            saveImage($)
         })
     })
 }
@@ -43,6 +44,21 @@ function saveArticle ($) {
                 console.warn(err);
             }
         })
+    })
+}
+
+function saveImage ($) {
+    $('.article-content img').each((index, img) => {
+        let newsTitle = $('.article-title a').text().trim()
+        let title = $(img).parent().next().text().trim();
+        let filename = `${title}.jpg`
+        let url = `http://www.ss.pku.edu.cn${$(img).attr('src')}`
+        request.head(url, (err, res, body) => {
+            if (err) {
+                console.warn(err)
+            }
+        })
+        request(url).pipe(fs.createWriteStream(`${__dirname}/images/${newsTitle}-${title}`))
     })
 }
 
