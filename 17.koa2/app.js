@@ -24,12 +24,12 @@ const config = require('./config')
 const model = require('./models')
 const isProduction = process.env.NODE_ENV == 'production'
 
-var now = new Date()
+/*var now = new Date()
 model.pet.create({
   id: `g-${now.getTime()}`,
   name: 'Gaffey',
   gender: false,
-  birth: '2007-07-07',
+  birth: `${now.getFullYear()}-${now.getMonth()+1}-${now.getDay()}`,
   createdAt: now.getTime(),
   updatedAt: now.getTime(),
   version: 0
@@ -37,15 +37,16 @@ model.pet.create({
   console.log(`created. ${JSON.stringify(p)}`)
 }).catch(err => {
   console.log(`failed: ${err}`)
-})
-
-/*Pet.findAll({
-  where: {
-    name: 'Gaffey'
-  }
-}).then(p => {
-  console.log(p)
 })*/
+
+model.user.create({
+  email: '77979****@qq.com',
+  passwd: '1234',
+  name: 'glm',
+  gender: false
+}).then(() => {
+  model.sync()
+})
 
 app.use(async (ctx, next) => {
   console.log(`Process ${ctx.request.method} ${ctx.request.url}...`)
@@ -68,4 +69,5 @@ app.use(templating('views', {
 app.use(controller())
 
 app.listen(3000)
+
 console.log("app started at port 3000...")

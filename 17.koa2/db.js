@@ -82,8 +82,10 @@ var exp = {
     defineModel: defineModel,
     sync: () => {
         // only allow create ddl in non-production environment:
+        console.log(`process.env.NODE_ENV=${process.env.NODE_ENV}`)
         if (process.env.NODE_ENV !== 'production') {
-            sequelize.sync({ force: true });
+          // 如果没有相关表，则创建
+          sequelize.sync({ force: true });
         } else {
             throw new Error('Cannot sync() when NODE_ENV is set to \'production\'.');
         }
