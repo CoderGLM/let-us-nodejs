@@ -59,3 +59,5 @@ handled by child 2161
 lzowvre-mbp:~ xxx$ curl 'http://127.0.0.1:1337/'
 handled by child 2161 
 ```
+
+现在是在tcp层面处理的，我们尝试将其转化到http层面，参考parent3.js
