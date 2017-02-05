@@ -20,6 +20,8 @@
 - 15.**socketio**：socket模块的基本使用；
 - 16.**hotload**: 流行的热加载；
 - 17.**koa2**: 到目前来说最新的koa框架，用来取代express；
+- 18.**crawler**: 爬虫； 
+- 19.**process**: 玩转进程； 
 
 ## SBY
 
