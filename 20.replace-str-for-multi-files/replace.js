@@ -9,9 +9,9 @@ if (params.length < 3) {
     process.exit(0);
 }
 
-traverse(params[0], params[1], params[2]);
+traverse(params[0], params[1], params[2], params[3], params[4]);
 
-function traverse(dir = process.cwd(), target = "", dist = "") {
+function traverse(dir = process.cwd(), target = "", dist = "", recursive = false, filetype = "") {
     let files = fs.readdirSync(dir);
     if (!files.length) {
         console.error(`"${dir}" is empty`);
@@ -22,13 +22,13 @@ function traverse(dir = process.cwd(), target = "", dist = "") {
         let which = path.join(dir, file);
         let stat = fs.statSync(which);
         if (stat.isDirectory()) {
-            if (params[3]) {
+            if (recursive) {
                 traverse(which, target, dist);
             } else {
                 console.log(`${file} is a directory, skipped.`);
             }
         } else {
-            replaceSingleFile(which, target, dist)
+            (path.extname(which) === filetype || !filetype) && replaceSingleFile(which, target, dist)
         }
     });
     console.log('Done')
@@ -45,6 +45,7 @@ function replaceSingleFile(which, target, dist) {
 function showHelp() {
     console.log("--------------------------------------");
     console.log("说明：替换指定目录下文件中字符串为指定字符串\r\n");
-    console.log("用法：babel-node replace.js <目录> <待替换字符串> <目标字符串>[ <recursive>]\n");
+    console.log("用法：babel-node replace.js <目录> <待替换字符串> <目标字符串>[ <recursive>][ <file-type>]\n");
+    console.log("示例：babel-node replace.js ~/Desktop/repDir 1 2 true .js");
     console.log("--------------------------------------");
 }
