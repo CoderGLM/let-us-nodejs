@@ -13,6 +13,7 @@
 - 09.**cli_tasks**: 控制台应用，告诉你如何拿到用户在控制台输入的参数；
 - 10.**mysql**: mysql的使用；
   - 10.2**mongodb**: mongodb以及mongose的使用，redis如何使用自行goo吧；
+  - 10.3**redis**:redis的使用；
 - 11.**connect**: connect的使用；
 - 12.**connect-self-middleware**: connect及自带中间件；
 - 13.**express**: express的使用；
